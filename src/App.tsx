@@ -782,6 +782,12 @@ function Navbar({ lang, toggleLang }: { lang: Lang; toggleLang: () => void }) {
 
 function Hero({ lang }: { lang: Lang }) {
   const c = t.hero;
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
+  useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth <= 640);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
   return (
     <section id="home" style={{
       minHeight: "100vh",
@@ -797,7 +803,7 @@ function Hero({ lang }: { lang: Lang }) {
       {/* Decorative postmarks — top right: Gwanghwamun / Eiffel / Globe infographics */}
       <div style={{
         position: "absolute", top: 72, right: "clamp(1.5rem,5vw,3.5rem)",
-        display: "flex", gap: 20,
+        display: isMobile ? "none" : "flex", gap: 20,
       }}>
         {/* Seoul — Gwanghwamun gate line art */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5, opacity: 0.45 }}>
