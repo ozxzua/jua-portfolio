@@ -10,7 +10,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { Mail, BookOpen, Camera, ArrowUpRight, ArrowRight, MapPin, Globe } from "lucide-react";
+import { Mail, BookOpen, Camera, ArrowUpRight, MapPin, Globe } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────────
 // BILINGUAL CONTENT
@@ -1456,7 +1456,7 @@ export default function App() {
     const style = document.createElement("style");
     style.textContent = CSS;
     document.head.appendChild(style);
-    return () => document.head.removeChild(style);
+    return () => { document.head.removeChild(style); };
   }, []);
 
   // Sync data-lang → triggers Korean typography CSS overrides
