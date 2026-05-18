@@ -632,49 +632,17 @@ const CSS = `
     background: linear-gradient(160deg, #F8F4EE 0%, #EDE8DD 60%, #E2D9CC 100%);
     min-height: 320px;
   }
-  /* 3D phone container */
   .pg-phone-3d-wrap {
-    perspective: 800px;
     display: flex;
     justify-content: center;
   }
   .pg-phone-frame {
     width: 130px;
-    background: linear-gradient(145deg, #2a2a2a 0%, #1A1410 40%, #0d0d0d 100%);
-    border-radius: 28px;
+    background: #1a1a1a;
+    border-radius: 24px;
     padding: 10px 7px;
     position: relative;
-    transform: rotateY(-18deg) rotateX(6deg);
-    transform-style: preserve-3d;
-    box-shadow:
-      6px 12px 32px rgba(26,20,16,0.25),
-      12px 24px 48px rgba(26,20,16,0.15),
-      2px 4px 8px rgba(26,20,16,0.2);
-    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
-  }
-  .pg-phone-frame:hover {
-    transform: rotateY(-8deg) rotateX(3deg) scale(1.04);
-  }
-  /* Side depth */
-  .pg-phone-frame::before {
-    content: '';
-    position: absolute;
-    top: 4px; bottom: 4px;
-    right: -5px;
-    width: 5px;
-    background: linear-gradient(to right, #111, #222);
-    border-radius: 0 4px 4px 0;
-    transform: translateZ(-2px);
-  }
-  /* Bottom depth */
-  .pg-phone-frame::after {
-    content: '';
-    position: absolute;
-    left: 4px; right: 4px;
-    bottom: -4px;
-    height: 4px;
-    background: linear-gradient(to bottom, #111, #0a0a0a);
-    border-radius: 0 0 3px 3px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   }
   .pg-phone-notch {
     width: 38px; height: 6px;
@@ -700,28 +668,6 @@ const CSS = `
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
   }
   .pg-phone-screen img { width:100%; height:100%; object-fit:cover; display:block; }
-  /* Side button details */
-  .pg-phone-btn-r {
-    position: absolute;
-    right: -7px; top: 60px;
-    width: 4px; height: 28px;
-    background: linear-gradient(to right, #222, #333);
-    border-radius: 0 3px 3px 0;
-  }
-  .pg-phone-btn-l1 {
-    position: absolute;
-    left: -7px; top: 52px;
-    width: 4px; height: 18px;
-    background: linear-gradient(to left, #222, #333);
-    border-radius: 3px 0 0 3px;
-  }
-  .pg-phone-btn-l2 {
-    position: absolute;
-    left: -7px; top: 78px;
-    width: 4px; height: 28px;
-    background: linear-gradient(to left, #222, #333);
-    border-radius: 3px 0 0 3px;
-  }
   /* Glow behind phone */
   .pg-phone-glow {
     position: absolute;
