@@ -134,6 +134,7 @@ const t = {
         category: "relevant",
       },
       {
+        id:      "kotra",
         period:  { en: "Apr 2025 – Jun 2025", ko: "2025.04 – 2025.06" },
         role:    { en: "Digital Trade Trainee", ko: "디지털 무역인력 deXters" },
         company: "KOTRA deXters Digital Trade Program",
@@ -161,6 +162,7 @@ const t = {
         category: "relevant",
       },
       {
+        id:      "council",
         period:  { en: "Jan 2024 – Dec 2025", ko: "2024.01 – 2025.12" },
         role:    { en: "PR Member", ko: "홍보부원" },
         company: { en: "Department Student Council", ko: "프랑스어학부 학생회" },
@@ -242,6 +244,27 @@ const t = {
     },
     cta:      { en: "Write to me",          ko: "메일 보내기" },
     stamped:  { en: "DELIVERED TO JUA OH", ko: "오주아에게 전달됨" },
+  },
+
+  galleries: {
+    kotra: {
+      from: "FROM · KOTRA DEXTERS · SEOUL, 2025",
+      title: "Hi To Me, Healthier ME!",
+      postmark: "KOTRA · 2025",
+      images: [
+        { src: "/images/kotra-ad1.png",  caption: "CAMPAIGN VISUAL · BRAND AD",                    isPhone: false },
+        { src: "/images/kotra-ad2.png",  caption: "PRODUCT CAMPAIGN · PACKAGING VISUAL",           isPhone: false },
+        { src: "/images/kotra-live.png", caption: "LIVE PRODUCT LISTING · B2B PLATFORM",           isPhone: true  },
+      ],
+    },
+    council: {
+      from: "FROM · HUFS FRENCH DEPT · SEOUL, 2024",
+      title: "Goods & Clothes — 1st Drop",
+      postmark: "HUFS · 2024",
+      images: [
+        { src: "/images/goods-clothes.png", caption: "GOODS & CLOTHES · DEPT MERCHANDISE DESIGN", isPhone: false },
+      ],
+    },
   },
 };
 
@@ -493,6 +516,7 @@ const CSS = `
   /* ── Responsive hide nav ── */
   @media (max-width: 640px) {
     .desktop-nav { display: none !important; }
+    .hero-postmarks { display: none !important; }
   }
 
   /* ── Lang toggle ── */
@@ -525,11 +549,269 @@ const CSS = `
     75%  { transform: scaleX(0.5);   opacity: 0.15; }
     100% { transform: scaleX(1);     opacity: 0.2;  }
   }
-  @keyframes dotPulse {
-    0%, 100% { r: 3; opacity: 1; }
-    50%       { r: 5; opacity: 0.6; }
+  /* ── Postcard Gallery Modal ── */
+  .pg-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(26,20,16,0.75);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: pgFadeIn 0.25s ease;
   }
-`;
+  @keyframes pgFadeIn { from { opacity:0; } to { opacity:1; } }
+  @keyframes pgSlideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+
+  .pg-modal {
+    background: var(--paper);
+    width: 100%; max-width: 580px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: pgSlideUp 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  .pg-stripe {
+    height: 7px;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--red) 0px, var(--red) 5px,
+      var(--paper) 5px, var(--paper) 12px,
+      #3B5EA6 12px, #3B5EA6 17px,
+      var(--paper) 17px, var(--paper) 24px
+    );
+  }
+  .pg-body { padding: 24px 28px 20px; }
+  .pg-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; }
+  .pg-from { font-size:9px; letter-spacing:0.25em; color:var(--ink2); margin-bottom:4px; }
+  .pg-title { font-size:15px; font-weight:500; color:var(--ink); }
+  .pg-stamp-area { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+  .pg-stamp {
+    width:50px; height:60px;
+    background: var(--paper2); border:1px solid var(--border);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-size:7px; letter-spacing:0.1em; color:var(--ink2);
+    position:relative; padding:4px;
+  }
+  .pg-stamp::before {
+    content:''; position:absolute; inset:-5px;
+    background:
+      radial-gradient(circle at 0 0,    var(--paper) 4px, transparent 4px),
+      radial-gradient(circle at 100% 0,  var(--paper) 4px, transparent 4px),
+      radial-gradient(circle at 0 100%,  var(--paper) 4px, transparent 4px),
+      radial-gradient(circle at 100% 100%, var(--paper) 4px, transparent 4px);
+    pointer-events:none;
+  }
+  .pg-postmark {
+    width:40px; height:40px; border-radius:50%;
+    border:1.5px solid var(--red);
+    display:flex; align-items:center; justify-content:center;
+    font-size:7px; color:var(--red); text-align:center; line-height:1.3;
+    letter-spacing:0.06em; opacity:0.45; position:relative;
+  }
+  .pg-postmark::before {
+    content:''; position:absolute;
+    top:50%; left:-8px; right:-8px; height:1.5px;
+    background:var(--red);
+  }
+  .pg-img-frame {
+    background:white; border:1px solid var(--border);
+    padding:10px; margin-bottom:14px;
+    box-shadow:2px 2px 0 var(--border);
+  }
+  .pg-img-main {
+    width:100%; height:230px;
+    object-fit:cover; display:block;
+  }
+  .pg-img-phone {
+    display:flex; justify-content:center; align-items:center;
+    height:230px; background:var(--paper2);
+  }
+  .pg-phone-frame {
+    width:110px; background:#1A1410;
+    border-radius:20px; padding:8px 6px;
+  }
+  .pg-phone-notch { width:34px; height:5px; background:#1A1410; border-radius:3px; margin:0 auto 5px; }
+  .pg-phone-screen { border-radius:12px; overflow:hidden; height:190px; }
+  .pg-phone-screen img { width:100%; height:100%; object-fit:cover; display:block; }
+  .pg-caption { font-size:9px; text-align:center; color:var(--ink2); margin-top:6px; letter-spacing:0.15em; }
+  .pg-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .pg-nav-btn {
+    width:30px; height:30px;
+    border:1px solid var(--border); background:white;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--ink2); font-size:13px;
+    transition:all 0.2s;
+  }
+  .pg-nav-btn:hover { border-color:var(--red); color:var(--red); }
+  .pg-count { font-size:9px; color:var(--ink2); letter-spacing:0.2em; }
+  .pg-divider { border:none; border-top:1px dashed var(--border); margin:12px 0; }
+  .pg-thumbs { display:flex; gap:6px; flex-wrap:wrap; }
+  .pg-thumb {
+    width:54px; height:54px;
+    border:1.5px solid transparent;
+    cursor:pointer; overflow:hidden;
+    background:var(--paper2);
+    transition:border-color 0.2s;
+    position:relative; flex-shrink:0;
+  }
+  .pg-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+  .pg-thumb.active { border-color:var(--red); }
+  .pg-thumb-label {
+    position:absolute; bottom:0; left:0; right:0;
+    background:rgba(26,20,16,0.6);
+    font-size:7px; color:white; text-align:center;
+    padding:2px; letter-spacing:0.06em;
+  }
+  .pg-close {
+    position:absolute; top:14px; right:14px;
+    width:26px; height:26px;
+    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(26,20,16,0.4);
+    color:white; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:12px; z-index:10;
+    transition:background 0.2s;
+  }
+  .pg-close:hover { background:var(--red); border-color:var(--red); }
+  .view-work-btn {
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:10px; letter-spacing:0.15em; color:var(--red);
+    background:none; border:none; cursor:pointer;
+    padding:0; margin-top:14px;
+    font-family:'DM Sans',sans-serif;
+    transition:opacity 0.2s;
+  }
+  .view-work-btn:hover { opacity:0.7; }
+  @media(max-width:640px) {
+    .pg-body { padding:18px 18px 16px; }
+    .pg-img-main { height:190px; }
+  }`
+
+// ─────────────────────────────────────────────────────────────────
+// POSTCARD GALLERY MODAL
+// ─────────────────────────────────────────────────────────────────
+
+interface GalleryImage {
+  src: string;
+  caption: string;
+  isPhone?: boolean;
+}
+
+interface GalleryData {
+  from: string;
+  title: string;
+  postmark: string;
+  images: GalleryImage[];
+}
+
+function PostcardGallery({ data, onClose }: { data: GalleryData; onClose: () => void }) {
+  const [cur, setCur] = useState(0);
+  const total = data.images.length;
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") setCur(c => (c + 1) % total);
+      if (e.key === "ArrowLeft")  setCur(c => (c - 1 + total) % total);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, total]);
+
+  const img = data.images[cur];
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  return (
+    <div className="pg-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="pg-modal">
+        {/* Close */}
+        <button className="pg-close" onClick={onClose}>✕</button>
+
+        {/* Top airmail stripe */}
+        <div className="pg-stripe" />
+
+        <div className="pg-body">
+          {/* Header */}
+          <div className="pg-header">
+            <div>
+              <div className="pg-from">{data.from}</div>
+              <div className="pg-title">{data.title}</div>
+            </div>
+            <div className="pg-stamp-area">
+              {/* Stamp with mini globe SVG */}
+              <div className="pg-stamp">
+                <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+                  <circle cx="15" cy="15" r="11" stroke="#B8976A" strokeWidth="0.8"/>
+                  <ellipse cx="15" cy="15" rx="11" ry="4.5" stroke="#B8976A" strokeWidth="0.6"/>
+                  <ellipse cx="15" cy="15" rx="4.5" ry="11" stroke="#B8976A" strokeWidth="0.6"/>
+                  <circle cx="19" cy="12" r="1.8" fill="#C4452A"/>
+                  <circle cx="12" cy="11" r="1.8" fill="#3B5EA6"/>
+                </svg>
+                <span style={{ marginTop: 2 }}>GLOBAL</span>
+              </div>
+              {/* Postmark */}
+              <div className="pg-postmark">
+                {data.postmark.split("·").map((line, i) => (
+                  <span key={i} style={{ display: "block" }}>{line.trim()}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Main image */}
+          <div className="pg-img-frame">
+            {img.isPhone ? (
+              <div className="pg-img-phone">
+                <div className="pg-phone-frame">
+                  <div className="pg-phone-notch" />
+                  <div className="pg-phone-screen">
+                    <img src={img.src} alt={img.caption} />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <img src={img.src} alt={img.caption} className="pg-img-main" />
+            )}
+            <div className="pg-caption">
+              {pad(cur + 1)} — {img.caption}
+            </div>
+          </div>
+
+          {/* Nav */}
+          {total > 1 && (
+            <>
+              <div className="pg-nav">
+                <button className="pg-nav-btn" onClick={() => setCur(c => (c - 1 + total) % total)}>←</button>
+                <span className="pg-count">{pad(cur + 1)} / {pad(total)}</span>
+                <button className="pg-nav-btn" onClick={() => setCur(c => (c + 1) % total)}>→</button>
+              </div>
+
+              <hr className="pg-divider" />
+
+              {/* Thumbnails */}
+              <div className="pg-thumbs">
+                {data.images.map((thumb, i) => (
+                  <div key={i} className={`pg-thumb${cur === i ? " active" : ""}`} onClick={() => setCur(i)}>
+                    {thumb.isPhone ? (
+                      <div style={{ width: "100%", height: "100%", background: "#1A1410", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <span style={{ fontSize: 16 }}>📱</span>
+                      </div>
+                    ) : (
+                      <img src={thumb.src} alt={`thumb ${i + 1}`} />
+                    )}
+                    <div className="pg-thumb-label">{pad(i + 1)}</div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Bottom airmail stripe */}
+        <div className="pg-stripe" />
+      </div>
+    </div>
+  );
+}
 
 // ─────────────────────────────────────────────────────────────────
 // 3D SPINNING GLOBE COMPONENT
@@ -782,12 +1064,6 @@ function Navbar({ lang, toggleLang }: { lang: Lang; toggleLang: () => void }) {
 
 function Hero({ lang }: { lang: Lang }) {
   const c = t.hero;
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
-  useEffect(() => {
-    const fn = () => setIsMobile(window.innerWidth <= 640);
-    window.addEventListener("resize", fn);
-    return () => window.removeEventListener("resize", fn);
-  }, []);
   return (
     <section id="home" style={{
       minHeight: "100vh",
@@ -801,9 +1077,9 @@ function Hero({ lang }: { lang: Lang }) {
       <div className="airmail-stripe" style={{ position: "absolute", top: 0, left: 0, right: 0 }} />
 
       {/* Decorative postmarks — top right: Gwanghwamun / Eiffel / Globe infographics */}
-      <div style={{
+      <div className="hero-postmarks" style={{
         position: "absolute", top: 72, right: "clamp(1.5rem,5vw,3.5rem)",
-        display: isMobile ? "none" : "flex", gap: 20,
+        display: "flex", gap: 20,
       }}>
         {/* Seoul — Gwanghwamun gate line art */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5, opacity: 0.45 }}>
@@ -1136,6 +1412,13 @@ function Work({ lang }: { lang: Lang }) {
   const c = t.work;
   const relevant = c.experience.filter(e => e.category === "relevant");
   const extra    = c.experience.filter(e => e.category === "extra");
+  const [gallery, setGallery] = useState<null | typeof t.galleries.kotra>(null);
+
+  const getGallery = (id: string) => {
+    if (id === "kotra")   return t.galleries.kotra;
+    if (id === "council") return t.galleries.council;
+    return null;
+  };
 
   const ExpGroup = ({ items, labelKey }: { items: typeof c.experience; labelKey: "relevantLabel" | "extraLabel" }) => (
     <div style={{ marginBottom: 64 }}>
@@ -1149,7 +1432,6 @@ function Work({ lang }: { lang: Lang }) {
         {items.map((exp, i) => (
           <Reveal key={i} delay={i * 0.08}>
             <div className="exp-card" style={{ borderLeftColor: exp.color }}>
-              {/* Header */}
               {/* Header row: role/company left | period right */}
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 10 }}>
                 <div style={{ minWidth: 0, flex: 1 }}>
@@ -1167,19 +1449,13 @@ function Work({ lang }: { lang: Lang }) {
                     </div>
                   </div>
                 </div>
-                {/* Period — always top-right, never wraps below */}
                 <span style={{ fontSize: 10, color: "var(--ink2)", letterSpacing: "0.1em", whiteSpace: "nowrap", flexShrink: 0, paddingTop: 3 }}>
                   {tx(exp.period, lang)}
                 </span>
               </div>
-              {/* Tag pill below header */}
+              {/* Tag pill */}
               <div style={{ marginBottom: 12 }}>
-                <span style={{
-                  fontSize: 9, color: exp.color, letterSpacing: "0.12em", fontWeight: 500,
-                  border: `1px solid ${exp.color}40`,
-                  padding: "2px 8px",
-                  background: `${exp.color}08`,
-                }}>
+                <span style={{ fontSize: 9, color: exp.color, letterSpacing: "0.12em", fontWeight: 500, border: `1px solid ${exp.color}40`, padding: "2px 8px", background: `${exp.color}08` }}>
                   {tx(exp.tag, lang)}
                 </span>
               </div>
@@ -1188,12 +1464,16 @@ function Work({ lang }: { lang: Lang }) {
                 {exp.points.map((pt, j) => (
                   <li key={j} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                     <span style={{ color: exp.color, marginTop: 3, fontSize: 8, flexShrink: 0 }}>✦</span>
-                    <span style={{ fontSize: 13, color: "var(--ink2)", lineHeight: 1.7 }}>
-                      {tx(pt, lang)}
-                    </span>
+                    <span style={{ fontSize: 13, color: "var(--ink2)", lineHeight: 1.7 }}>{tx(pt, lang)}</span>
                   </li>
                 ))}
               </ul>
+              {/* View Work button — only for cards with gallery */}
+              {getGallery(exp.id ?? "") && (
+                <button className="view-work-btn" onClick={() => setGallery(getGallery(exp.id ?? ""))}>
+                  {lang === "en" ? "View Work →" : "작업 보기 →"}
+                </button>
+              )}
             </div>
           </Reveal>
         ))}
@@ -1202,10 +1482,12 @@ function Work({ lang }: { lang: Lang }) {
   );
 
   return (
-    <section id="work" style={{
-      background: "var(--white)",
-      padding: "100px clamp(1.5rem,5vw,3.5rem)",
-    }}>
+    <>
+      {gallery && <PostcardGallery data={gallery} onClose={() => setGallery(null)} />}
+      <section id="work" style={{
+        background: "var(--white)",
+        padding: "100px clamp(1.5rem,5vw,3.5rem)",
+      }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
 
         {/* Heading */}
@@ -1224,6 +1506,7 @@ function Work({ lang }: { lang: Lang }) {
         <ExpGroup items={extra}    labelKey="extraLabel" />
       </div>
     </section>
+    </>
   );
 }
 
