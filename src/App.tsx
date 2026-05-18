@@ -629,7 +629,7 @@ const CSS = `
   .pg-img-phone {
     display:flex; justify-content:center; align-items:center;
     padding: 24px 0;
-    background: linear-gradient(135deg, #1a1410 0%, #2d2420 100%);
+    background: linear-gradient(160deg, #F8F4EE 0%, #EDE8DD 60%, #E2D9CC 100%);
     min-height: 320px;
   }
   /* 3D phone container */
@@ -647,9 +647,9 @@ const CSS = `
     transform: rotateY(-18deg) rotateX(6deg);
     transform-style: preserve-3d;
     box-shadow:
-      4px 8px 24px rgba(0,0,0,0.8),
-      -2px -2px 8px rgba(255,255,255,0.04),
-      inset 0 1px 0 rgba(255,255,255,0.08);
+      6px 12px 32px rgba(26,20,16,0.25),
+      12px 24px 48px rgba(26,20,16,0.15),
+      2px 4px 8px rgba(26,20,16,0.2);
     transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
   }
   .pg-phone-frame:hover {
