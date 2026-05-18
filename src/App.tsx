@@ -254,7 +254,7 @@ const t = {
       images: [
         { src: "/images/kotra-ad1.png",  caption: "CAMPAIGN VISUAL · BRAND AD",                    isPhone: false },
         { src: "/images/kotra-ad2.png",  caption: "PRODUCT CAMPAIGN · PACKAGING VISUAL",           isPhone: false },
-        { src: "/images/kotra-live.png", caption: "LIVE PRODUCT LISTING · B2B PLATFORM",           isPhone: true  },
+        { src: "/images/kotra-live.png", caption: "ACTUAL LANDING PAGE · LIVE B2B PRODUCT LISTING PAGE", isPhone: true  },
       ],
     },
     council: {
@@ -619,21 +619,120 @@ const CSS = `
     box-shadow:2px 2px 0 var(--border);
   }
   .pg-img-main {
-    width:100%; height:230px;
-    object-fit:cover; display:block;
+    width:100%;
+    height:auto;
+    max-height:420px;
+    object-fit:contain;
+    display:block;
+    background: var(--paper2);
   }
   .pg-img-phone {
     display:flex; justify-content:center; align-items:center;
-    height:230px; background:var(--paper2);
+    padding: 24px 0;
+    background: linear-gradient(135deg, #1a1410 0%, #2d2420 100%);
+    min-height: 320px;
+  }
+  /* 3D phone container */
+  .pg-phone-3d-wrap {
+    perspective: 800px;
+    display: flex;
+    justify-content: center;
   }
   .pg-phone-frame {
-    width:110px; background:#1A1410;
-    border-radius:20px; padding:8px 6px;
+    width: 130px;
+    background: linear-gradient(145deg, #2a2a2a 0%, #1A1410 40%, #0d0d0d 100%);
+    border-radius: 28px;
+    padding: 10px 7px;
+    position: relative;
+    transform: rotateY(-18deg) rotateX(6deg);
+    transform-style: preserve-3d;
+    box-shadow:
+      4px 8px 24px rgba(0,0,0,0.8),
+      -2px -2px 8px rgba(255,255,255,0.04),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
   }
-  .pg-phone-notch { width:34px; height:5px; background:#1A1410; border-radius:3px; margin:0 auto 5px; }
-  .pg-phone-screen { border-radius:12px; overflow:hidden; height:190px; }
+  .pg-phone-frame:hover {
+    transform: rotateY(-8deg) rotateX(3deg) scale(1.04);
+  }
+  /* Side depth */
+  .pg-phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 4px; bottom: 4px;
+    right: -5px;
+    width: 5px;
+    background: linear-gradient(to right, #111, #222);
+    border-radius: 0 4px 4px 0;
+    transform: translateZ(-2px);
+  }
+  /* Bottom depth */
+  .pg-phone-frame::after {
+    content: '';
+    position: absolute;
+    left: 4px; right: 4px;
+    bottom: -4px;
+    height: 4px;
+    background: linear-gradient(to bottom, #111, #0a0a0a);
+    border-radius: 0 0 3px 3px;
+  }
+  .pg-phone-notch {
+    width: 38px; height: 6px;
+    background: #0d0d0d;
+    border-radius: 3px;
+    margin: 0 auto 6px;
+    position: relative;
+  }
+  .pg-phone-notch::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    border: 1px solid #333;
+  }
+  .pg-phone-screen {
+    border-radius: 16px;
+    overflow: hidden;
+    height: 220px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  }
   .pg-phone-screen img { width:100%; height:100%; object-fit:cover; display:block; }
-  .pg-caption { font-size:9px; text-align:center; color:var(--ink2); margin-top:6px; letter-spacing:0.15em; }
+  /* Side button details */
+  .pg-phone-btn-r {
+    position: absolute;
+    right: -7px; top: 60px;
+    width: 4px; height: 28px;
+    background: linear-gradient(to right, #222, #333);
+    border-radius: 0 3px 3px 0;
+  }
+  .pg-phone-btn-l1 {
+    position: absolute;
+    left: -7px; top: 52px;
+    width: 4px; height: 18px;
+    background: linear-gradient(to left, #222, #333);
+    border-radius: 3px 0 0 3px;
+  }
+  .pg-phone-btn-l2 {
+    position: absolute;
+    left: -7px; top: 78px;
+    width: 4px; height: 28px;
+    background: linear-gradient(to left, #222, #333);
+    border-radius: 3px 0 0 3px;
+  }
+  /* Glow behind phone */
+  .pg-phone-glow {
+    position: absolute;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(196,69,42,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .pg-caption { font-size:9px; text-align:center; color:var(--ink2); margin-top:8px; letter-spacing:0.12em; line-height:1.6; }
   .pg-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
   .pg-nav-btn {
     width:30px; height:30px;
@@ -761,10 +860,21 @@ function PostcardGallery({ data, onClose }: { data: GalleryData; onClose: () => 
           <div className="pg-img-frame">
             {img.isPhone ? (
               <div className="pg-img-phone">
-                <div className="pg-phone-frame">
-                  <div className="pg-phone-notch" />
-                  <div className="pg-phone-screen">
-                    <img src={img.src} alt={img.caption} />
+                <div className="pg-phone-3d-wrap">
+                  <div style={{ position: "relative" }}>
+                    <div className="pg-phone-glow" />
+                    <div className="pg-phone-frame">
+                      {/* Side buttons */}
+                      <div className="pg-phone-btn-r" />
+                      <div className="pg-phone-btn-l1" />
+                      <div className="pg-phone-btn-l2" />
+                      {/* Notch */}
+                      <div className="pg-phone-notch" />
+                      {/* Screen */}
+                      <div className="pg-phone-screen">
+                        <img src={img.src} alt={img.caption} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
