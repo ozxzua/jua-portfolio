@@ -93,7 +93,7 @@ const t = {
         company: "Les Mains Dorées",
         city:    "Seoul",
         color:   "#C4452A",
-        tag:     { en: "Communication · FR · EN", ko: "커뮤니케이션 · 재고 관리" },
+        tag:     { en: "Hospitality · FR · EN", ko: "고객 서비스 · 커뮤니케이션" },
         points:  [
           {
             en: "Served 100+ international customers daily, providing personalised coffee recommendations in English and French.",
@@ -143,19 +143,19 @@ const t = {
         tag:     { en: "Digital Marketing · B2B", ko: "디지털 마케팅 · B2B" },
         points:  [
           {
-            en: "Conducted cold-email outreach to 50+ distributors, generating buyer interest from a German distributor for a Korean beverage brand with no prior export history.",
+            en: "Researched target countries and distribution channels for a Korean beverage brand's overseas market entry.",
             ko: "한국 건강음료 브랜드의 해외 시장 진출을 위해 타깃 국가 및 유통 채널 리서치 수행",
           },
           {
-            en: "Developed localised B2B marketing strategies and produced promotional content for a Korean health beverage brand.",
+            en: "Sent cold-emails to 50+ overseas distributors and secured interest from a German buyer.",
             ko: "50개 이상 해외 유통사를 대상으로 콜드메일을 발송하고, 독일 바이어의 관심 응답 확보",
           },
           {
-            en: 'Proposed the winning slogan "Hi To Me, Healthier ME!" — later selected for the brand\'s official advertising.',
-            ko: '제품 특성과 타깃 소비자를 고려한 B2B 마케팅 전략 및 홍보 콘텐츠 기획',
+            en: "Planned B2B marketing strategy and promotional content based on product features and target consumers.",
+            ko: "제품 특성과 타깃 소비자를 고려한 B2B 마케팅 전략 및 홍보 콘텐츠 기획",
           },
           {
-            en: 'Proposed the winning slogan "Hi To Me, Healthier ME!" — selected for official ad content.',
+            en: '"Hi To Me, Healthier ME!" slogan proposed and selected as the official advertising copy.',
             ko: '"Hi To Me, Healthier ME!" 슬로건 제안, 공식 광고 콘텐츠 문구로 선정',
           },
         ],
@@ -171,15 +171,15 @@ const t = {
         tag:     { en: "PR · Event Operations", ko: "홍보 · 행사 운영" },
         points:  [
           {
-            en: "Coordinated department festival booth operations including promotional materials, setup, visitor guidance, and on-site activities.",
+            en: "Created card news, posters and content for department events; managed the department SNS account.",
             ko: "학과 행사 홍보를 위한 카드뉴스, 포스터 및 안내 콘텐츠 제작 및 학과 SNS 계정 운영 관리",
           },
           {
-            en: "Designed department merchandise and coordinated vendor production, achieving a complete sell-out.",
+            en: "Coordinated festival booth operations including promotional materials, visitor guidance, and on-site activities.",
             ko: "학과 축제 부스 운영을 위한 홍보물 준비, 방문자 안내 및 현장 프로그램 운영",
           },
           {
-            en: "Designed department goods and managed vendor communications — full sell-out achieved.",
+            en: "Designed department merchandise and managed vendor production — achieved a complete sell-out.",
             ko: "학과 굿즈 디자인 및 제작 업체 커뮤니케이션을 담당하고 제작 물량 전량 판매 달성",
           },
         ],
@@ -195,11 +195,11 @@ const t = {
         points:  [
           {
             en: "Tailored English lessons to individual student goals and learning pace, earning parent referrals for two additional students.",
-            ko: "학생별 목표와 학습 속도에 맞춰 영어 수업을 맞춤 설계하여 두 명의 학생을 학부모 추천으로 연결했습니다.",
+            ko: "학생별 목표와 학습 속도에 맞춰 영어 수업을 맞춤 설계하여 학부모 추천으로 추가 학생 2명 연결",
           },
           {
             en: "Increased an elementary student's AR reading level by one stage within two months through customised learning strategies.",
-            ko: "맞춤형 학습 전략으로 초등학생의 AR 독서 레벨을 두 달 만에 한 단계 높였습니다.",
+            ko: "맞춤형 학습 전략으로 초등학생의 AR 독서 레벨을 두 달 만에 한 단계 향상",
           },
         ],
         category: "extra",
@@ -223,8 +223,8 @@ const t = {
     tech: [
       { name: { en: "Content Creation",  ko: "콘텐츠 제작" },  note: { en: "Instagram · YouTube · Reels · Card News", ko: "인스타그램 · 유튜브 · 릴스 · 카드뉴스" }, icon: "✦" },
       { name: { en: "Digital Marketing", ko: "디지털 마케팅" }, note: { en: "Campaigns · B2B Strategy",    ko: "캠페인 · B2B 전략" },          icon: "✦" },
-      { name: { en: "MS Office · Excel", ko: "MS Office (Excel · PowerPoint · Word)" }, note: { en: "Data tracking & analysis", ko: "데이터 추적 및 분석" }, icon: "✦" },
-      { name: { en: "Figma", ko: "Figma" }, note: { en: "UI Design · Visual Prototyping", ko: "UI 디자인 · 시각 프로토타이핑" }, icon: "✦" },
+      { name: { en: "MS Office", ko: "MS Office" }, note: { en: "Word · Excel · PowerPoint", ko: "Word · Excel · PowerPoint" }, icon: "✦" },
+      { name: { en: "Figma", ko: "Figma" }, note: { en: "", ko: "" }, icon: "✦" },
       { name: { en: "Cross-cultural Communication", ko: "다문화 커뮤니케이션" }, note: { en: "Korea · Europe · Global", ko: "한국 · 유럽 · 글로벌" }, icon: "✦" },
     ],
     cert: {
