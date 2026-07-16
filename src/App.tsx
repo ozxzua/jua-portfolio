@@ -29,12 +29,12 @@ const EDUCATION = {
 } satisfies Record<EducationKey, { eyebrow: string; title: string; subtitle: string; body: string }>;
 
 const SKILL_DETAILS = [
-  { code: "W", name: "Word", detail: "Reports, proposals, structured documentation" },
-  { code: "P", name: "PowerPoint", detail: "Story-led decks, campaign proposals, presentations" },
-  { code: "X", name: "Excel", detail: "Inventory tracking, research tables, practical analysis" },
-  { code: "C", name: "CapCut", detail: "Short-form video, subtitles, social-first editing" },
-  { code: "N", name: "Notion", detail: "Project planning, documentation, collaboration" },
-  { code: "F", name: "Figma", detail: "Visual systems, layouts, prototypes, social assets" },
+  { code: "W", name: "Word", tone: "word", detail: "Reports, proposals, structured documentation" },
+  { code: "P", name: "PowerPoint", tone: "powerpoint", detail: "Story-led decks, campaign proposals, presentations" },
+  { code: "X", name: "Excel", tone: "excel", detail: "Inventory tracking, research tables, practical analysis" },
+  { code: "C", name: "CapCut", tone: "capcut", detail: "Short-form video, subtitles, social-first editing" },
+  { code: "N", name: "Notion", tone: "notion", detail: "Project planning, documentation, collaboration" },
+  { code: "F", name: "Figma", tone: "figma", detail: "Visual systems, layouts, prototypes, social assets" },
 ];
 
 function scrollToSection(id: string) {
@@ -99,11 +99,12 @@ function ProfileCard() {
         aria-label="Open Jua's profile card"
       >
         <div className="profile-photo-frame">
-          <img src="/media/jua-profile.webp" alt="Jua Oh profile" />
+          <img src="/media/jua-profile-original.png" alt="Jua Oh profile" />
         </div>
-        <strong>JUA OH</strong>
-        <span>SEOUL, KOREA · KO / EN / FR</span>
-        <small>CLICK TO OPEN</small>
+        <div className="profile-card-caption">
+          <strong>JUA OH</strong>
+          <span>SEOUL, KOREA · KO / EN / FR</span>
+        </div>
       </button>
 
       <div className={`profile-popover ${open ? "is-visible" : ""}`} aria-hidden={!open}>
@@ -123,7 +124,6 @@ function Hero() {
   return (
     <section id="home" className="hero section-anchor">
       <div className="hero-copy">
-        <p className="hero-kicker">PORTFOLIO · 2026</p>
         <h1>
           Hello<br />I’m <strong>Jua</strong>
         </h1>
@@ -146,13 +146,15 @@ function TravelGlobe() {
   return (
     <div className="globe-stage" aria-label="Animated route between Seoul and Paris">
       <div className="globe-shell">
-        <div className="globe-grid" />
-        <span className="city-dot seoul-dot" />
-        <span className="city-label seoul-label">SEOUL</span>
-        <span className="city-dot paris-dot" />
-        <span className="city-label paris-label">PARIS</span>
-        <div className="plane-orbit">
-          <span className="plane">✈</span>
+        <img className="globe-original" src="/media/about-globe-original.png" alt="" />
+        <div className="globe-route-overlay" aria-hidden="true">
+          <span className="city-dot seoul-dot" />
+          <span className="city-label seoul-label">SEOUL</span>
+          <span className="city-dot paris-dot" />
+          <span className="city-label paris-label">PARIS</span>
+          <div className="plane-orbit">
+            <span className="plane">✈</span>
+          </div>
         </div>
       </div>
       <button type="button" className="education-link" onClick={() => scrollToSection("education")}>
@@ -218,7 +220,9 @@ function Education() {
       <h2>Education</h2>
       <div className="education-grid">
         <button type="button" className="education-card interactive" onClick={() => setSelected("hufs")}>
-          <div className="school-mark hufs-mark">HUFS</div>
+          <div className="school-mark hufs-mark">
+            <img src="/media/hufs-logo-original.png" alt="Hankuk University of Foreign Studies logo" />
+          </div>
           <div>
             <strong>Hankuk University of<br />Foreign Studies</strong>
             <span>B.A. French &amp; EU Studies</span>
@@ -228,7 +232,7 @@ function Education() {
 
         <button type="button" className="education-card interactive" onClick={() => setSelected("inalco")}>
           <div className="school-mark inalco-mark">
-            <img src="/media/inalco-logo.webp" alt="INALCO logo" />
+            <img src="/media/inalco-logo-original.png" alt="INALCO logo" />
           </div>
           <div>
             <strong>Institut National des Langues et<br />Civilisations Orientales</strong>
@@ -242,72 +246,37 @@ function Education() {
   );
 }
 
-function GlobeArt() {
-  return (
-    <div className="work-art globe-art" aria-hidden="true">
-      <div className="mini-globe">
-        <i />
-        <i />
-        <i />
-        <i />
-      </div>
-      <span className="orbit-dot one" />
-      <span className="orbit-dot two" />
-    </div>
-  );
-}
-
-function TomatoArt() {
-  return (
-    <div className="work-art tomato-art" aria-hidden="true">
-      {Array.from({ length: 8 }, (_, index) => (
-        <span key={index} className={`tomato tomato-${index + 1}`}>
-          <i>✦</i>
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function LettersArt() {
-  return (
-    <div className="work-art letters-art" aria-hidden="true">
-      {"HUFS".split("").map((letter, index) => (
-        <span key={letter} style={{ animationDelay: `${index * -0.55}s` }}>
-          {letter}
-        </span>
-      ))}
-    </div>
-  );
-}
-
 const WORK_CARDS: Array<{
   key: ProjectKey;
   title: string;
   subtitle: string;
   role: string;
-  Art: () => ReactNode;
+  cover: string;
+  alt: string;
 }> = [
   {
     key: "betterleaders",
     title: "Global Ambassador\nBetter Leaders",
     subtitle: "LG Energy Solution · Seoul",
     role: "Project Coordination · ESG\nGlobal Content",
-    Art: GlobeArt,
+    cover: "/media/work-better-leaders-original.jpg",
+    alt: "Earth viewed from space",
   },
   {
     key: "hitome",
     title: "Hitome",
     subtitle: "KOTRA deXters Digital\nTrade Program · Seoul",
     role: "Market Research\nB2B Strategy",
-    Art: TomatoArt,
+    cover: "/media/work-hitome-original.jpg",
+    alt: "Red spheres from the original Hitome project design",
   },
   {
     key: "branding",
     title: "PR Member",
     subtitle: "Department Student Council\nSeoul",
     role: "Branding · PR\nEvent Operations",
-    Art: LettersArt,
+    cover: "/media/work-branding-original.jpg",
+    alt: "HUFS lettering from the original branding design",
   },
 ];
 
@@ -316,9 +285,18 @@ function Work() {
     <section id="work" className="work section-anchor grid-background">
       <h2>WORK</h2>
       <div className="work-grid">
-        {WORK_CARDS.map(({ key, title, subtitle, role, Art }) => (
+        {WORK_CARDS.map(({ key, title, subtitle, role, cover, alt }) => (
           <article className="work-card interactive" key={key}>
-            <Art />
+            <div className="work-cover-frame">
+              <img className="work-cover" src={cover} alt={alt} />
+              {key === "branding" && (
+                <div className="branding-lettering" aria-hidden="true">
+                  {(["h", "u", "f", "s"] as const).map((letter) => (
+                    <img key={letter} src={`/media/branding-${letter}-original.png`} alt="" />
+                  ))}
+                </div>
+              )}
+            </div>
             <div className="work-card-body">
               <h3>{title.split("\n").map((line) => <span key={line}>{line}</span>)}</h3>
               <p>{subtitle.split("\n").map((line) => <span key={line}>{line}</span>)}</p>
@@ -431,12 +409,11 @@ function Projects() {
           "Developed a deeper understanding of ESG and sustainability",
         ]}
         visual={
-          <div className="laptop-mockup interactive">
-            <div className="laptop-screen">
-              <img src="/media/better-leaders.webp" alt="Better Leaders global campaign video" />
-            </div>
-            <div className="laptop-base" />
-          </div>
+          <img
+            className="project-original project-original-laptop interactive"
+            src="/media/better-leaders-original.png"
+            alt="Better Leaders global campaign shown in the original laptop design"
+          />
         }
       />
 
@@ -463,10 +440,11 @@ function Projects() {
         ]}
         visual={
           <button type="button" className="phone-project-button" onClick={() => setVideoOpen(true)}>
-            <div className="phone-mockup interactive">
-              <div className="phone-speaker" />
-              <img src="/media/hitome-screen.webp" alt="Hitome BuyKOREA product page shown on a phone" />
-            </div>
+            <img
+              className="project-original project-original-phone interactive"
+              src="/media/hitome-phone-original.png"
+              alt="Hitome BuyKOREA product page shown in the original phone design"
+            />
             <span>Click here to see more</span>
           </button>
         }
@@ -493,9 +471,11 @@ function Projects() {
           "Gained experience in branding, vendor communication, and event execution",
         ]}
         visual={
-          <div className="poster-mockup interactive">
-            <img src="/media/department-branding.webp" alt="Department merchandise and branding outcomes" />
-          </div>
+          <img
+            className="project-original project-original-poster interactive"
+            src="/media/department-branding-original.png"
+            alt="Department merchandise and branding outcomes in the original poster design"
+          />
         }
       />
 
@@ -542,7 +522,7 @@ function Skills() {
                 <button
                   type="button"
                   key={skill.name}
-                  className={`skill-icon interactive ${originalIndex === activeSkill ? "is-active" : ""}`}
+                  className={`skill-icon skill-${skill.tone} interactive ${originalIndex === activeSkill ? "is-active" : ""}`}
                   onClick={() => setActiveSkill(originalIndex)}
                 >
                   <span>{skill.code}</span>
