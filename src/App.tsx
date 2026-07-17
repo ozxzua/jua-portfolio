@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 type ProjectKey = "betterleaders" | "hitome" | "branding";
 type EducationKey = "hufs" | "inalco";
@@ -89,34 +90,60 @@ function Navbar({ active }: { active: string }) {
 function ProfileCard() {
   const [open, setOpen] = useState(false);
 
-  return (
-    <div className="profile-card-wrap">
-      <button
-        type="button"
-        className={`profile-card interactive ${open ? "is-open" : ""}`}
-        onClick={() => setOpen((value) => !value)}
-        aria-expanded={open}
-        aria-label="Open Jua's profile card"
-      >
-        <div className="profile-photo-frame">
-          <img src="/media/jua-profile-original.png" alt="Jua Oh profile" />
-        </div>
-        <div className="profile-card-caption">
-          <strong>JUA OH</strong>
-          <span>SEOUL, KOREA · KO / EN / FR</span>
-        </div>
-      </button>
+  useEffect(() => {
+    if (!open) return;
 
-      <div className={`profile-popover ${open ? "is-visible" : ""}`} aria-hidden={!open}>
-        <span className="profile-popover-label">PROFILE CARD</span>
-        <p>Market research, strategic thinking, and global communication — translated into useful action.</p>
-        <div className="profile-tags">
-          <span>ESG</span>
-          <span>Marketing</span>
-          <span>Cross-cultural</span>
-        </div>
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("keydown", onKey);
+    document.body.classList.add("modal-open");
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.classList.remove("modal-open");
+    };
+  }, [open]);
+
+  return (
+    <>
+      <div className="profile-card-wrap">
+        <button
+          type="button"
+          className={`profile-card interactive ${open ? "is-open" : ""}`}
+          onClick={() => setOpen(true)}
+          aria-expanded={open}
+          aria-label="Open Jua's profile card"
+        >
+          <div className="profile-photo-frame">
+            <img src="/media/jua-profile-original.png" alt="Jua Oh profile" />
+          </div>
+          <div className="profile-card-caption">
+            <strong>JUA OH</strong>
+            <span>SEOUL, KOREA · KO / EN / FR</span>
+          </div>
+        </button>
       </div>
-    </div>
+
+      {open && createPortal(
+        <div className="profile-modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}>
+          <article className="profile-popover" role="dialog" aria-modal="true" aria-label="Jua Oh profile card">
+            <button type="button" className="profile-modal-close" onClick={() => setOpen(false)} aria-label="Close profile card">
+              ×
+            </button>
+            <span className="profile-popover-label">PROFILE CARD</span>
+            <h2>JUA OH</h2>
+            <p>Market research, strategic thinking, and global communication — translated into useful action.</p>
+            <div className="profile-tags">
+              <span>ESG</span>
+              <span>Marketing</span>
+              <span>Cross-cultural</span>
+            </div>
+          </article>
+        </div>,
+        document.body,
+      )}
+    </>
   );
 }
 
@@ -253,6 +280,7 @@ const WORK_CARDS: Array<{
   role: string;
   cover: string;
   alt: string;
+  video?: string;
 }> = [
   {
     key: "betterleaders",
@@ -269,6 +297,7 @@ const WORK_CARDS: Array<{
     role: "Market Research\nB2B Strategy",
     cover: "/media/work-hitome-original.jpg",
     alt: "Red spheres from the original Hitome project design",
+    video: "/videos/hitome-ko.mp4",
   },
   {
     key: "branding",
@@ -285,10 +314,16 @@ function Work() {
     <section id="work" className="work section-anchor grid-background">
       <h2>WORK</h2>
       <div className="work-grid">
-        {WORK_CARDS.map(({ key, title, subtitle, role, cover, alt }) => (
+        {WORK_CARDS.map(({ key, title, subtitle, role, cover, alt, video }) => (
           <article className="work-card interactive" key={key}>
             <div className="work-cover-frame">
-              <img className="work-cover" src={cover} alt={alt} />
+              {video ? (
+                <video className="work-cover work-cover-video" autoPlay muted loop playsInline preload="metadata" poster={cover} aria-label="Hitome project video">
+                  <source src={video} type="video/mp4" />
+                </video>
+              ) : (
+                <img className="work-cover" src={cover} alt={alt} />
+              )}
               {key === "branding" && (
                 <div className="branding-lettering" aria-hidden="true">
                   {(["h", "u", "f", "s"] as const).map((letter) => (
@@ -331,8 +366,8 @@ function ProjectSection({
 }) {
   return (
     <section id={id} className="project-detail section-anchor">
+      <h2 className="project-title">{title}</h2>
       <div className="project-copy">
-        <h2>{title}</h2>
         <p className="project-intro">{intro}</p>
         <div className="project-block">
           <h3>My Role</h3>
@@ -352,44 +387,26 @@ function ProjectSection({
   );
 }
 
-function VideoModal({ onClose }: { onClose: () => void }) {
+function HitomePhonePlayer() {
   const [language, setLanguage] = useState<VideoLanguage>("ko");
   const source = language === "ko" ? "/videos/hitome-ko.mp4" : "/videos/hitome-de.mp4";
 
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    document.body.classList.add("modal-open");
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.classList.remove("modal-open");
-    };
-  }, [onClose]);
-
   return (
-    <div className="modal-backdrop video-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <div className="video-modal" role="dialog" aria-modal="true" aria-label="Hitome campaign videos">
-        <button type="button" className="modal-close" onClick={onClose} aria-label="Close video">
-          ×
-        </button>
-        <div className="video-tabs" role="tablist">
-          <button type="button" className={language === "ko" ? "is-active" : ""} onClick={() => setLanguage("ko")}>KOREAN</button>
-          <button type="button" className={language === "de" ? "is-active" : ""} onClick={() => setLanguage("de")}>GERMAN</button>
-        </div>
-        <div className="large-phone">
-          <div className="phone-speaker" />
-          <video key={source} src={source} controls autoPlay playsInline preload="metadata" />
-        </div>
+    <div className="hitome-phone-player">
+      <div className="hitome-phone-shell">
+        <div className="hitome-phone-notch" aria-hidden="true" />
+        <video key={source} src={source} controls autoPlay muted loop playsInline preload="metadata" aria-label={`${language === "ko" ? "Korean" : "German"} Hitome campaign video`} />
+      </div>
+      <span className="hitome-player-caption">Click here to see more</span>
+      <div className="hitome-video-tabs" role="tablist" aria-label="Hitome video language">
+        <button type="button" role="tab" aria-selected={language === "ko"} className={language === "ko" ? "is-active" : ""} onClick={() => setLanguage("ko")}>KOREAN</button>
+        <button type="button" role="tab" aria-selected={language === "de"} className={language === "de" ? "is-active" : ""} onClick={() => setLanguage("de")}>GERMAN</button>
       </div>
     </div>
   );
 }
 
 function Projects() {
-  const [videoOpen, setVideoOpen] = useState(false);
-
   return (
     <>
       <ProjectSection
@@ -438,16 +455,7 @@ function Projects() {
           "Generated buyer interest from Germany and the U.S.",
           "Built practical experience in market research, export marketing, and content planning",
         ]}
-        visual={
-          <button type="button" className="phone-project-button" onClick={() => setVideoOpen(true)}>
-            <img
-              className="project-original project-original-phone interactive"
-              src="/media/hitome-phone-original.png"
-              alt="Hitome BuyKOREA product page shown in the original phone design"
-            />
-            <span>Click here to see more</span>
-          </button>
-        }
+        visual={<HitomePhonePlayer />}
       />
 
       <ProjectSection
@@ -479,7 +487,6 @@ function Projects() {
         }
       />
 
-      {videoOpen && <VideoModal onClose={() => setVideoOpen(false)} />}
     </>
   );
 }
