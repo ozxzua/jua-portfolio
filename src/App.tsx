@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties, FormEvent, ReactNode } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 type ProjectKey = "betterleaders" | "hitome" | "branding";
@@ -49,10 +49,16 @@ function scrollToProject(id: string) {
 
   const headerOffset = 92;
   const targetTop = Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerOffset);
+  const root = document.documentElement;
+  const previousScrollBehavior = root.style.scrollBehavior;
 
   window.history.pushState(null, "", `#${id}`);
-  window.scrollTo({ top: targetTop, behavior: "auto" });
+  root.style.scrollBehavior = "auto";
+  window.scrollTo(0, targetTop);
   target.focus({ preventScroll: true });
+  window.requestAnimationFrame(() => {
+    root.style.scrollBehavior = previousScrollBehavior;
+  });
 }
 
 function useActiveSection() {
@@ -348,16 +354,14 @@ function Work() {
               <h3>{title.split("\n").map((line) => <span key={line}>{line}</span>)}</h3>
               <p>{subtitle.split("\n").map((line) => <span key={line}>{line}</span>)}</p>
               <strong>{role.split("\n").map((line) => <span key={line}>{line}</span>)}</strong>
-              <a
+              <button
+                type="button"
                 className="view-project-link"
-                href={`#project-${key}`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  scrollToProject(`project-${key}`);
-                }}
+                aria-controls={`project-${key}`}
+                onClick={() => scrollToProject(`project-${key}`)}
               >
                 VIEW PROJECT
-              </a>
+              </button>
             </div>
           </article>
         ))}
@@ -442,8 +446,16 @@ function HitomePhonePreview() {
 
   return (
     <>
-      <button type="button" className="hitome-phone-preview interactive" onClick={() => setOpen(true)} aria-haspopup="dialog">
-        <img src="/media/hitome-phone-original.png" alt="Original Hitome phone mockup" />
+      <button
+        type="button"
+        className="hitome-phone-preview"
+        onClick={() => setOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+      >
+        <span className="hitome-phone-outline">
+          <img src="/media/hitome-phone-original.png" alt="Original Hitome phone mockup" />
+        </span>
         <span>Click here to see more</span>
       </button>
       {open && <HitomeVideoModal onClose={() => setOpen(false)} />}
@@ -451,67 +463,25 @@ function HitomePhonePreview() {
   );
 }
 
-const DEPARTMENT_GOODS: Array<{
-  id: string;
-  label: string;
-  src: string;
-  hotspot: CSSProperties;
-}> = [
-  { id: "mug-quote", label: "French quote mug", src: "/media/department-goods/mug-quote.png", hotspot: { left: "50%", top: "29.8%", width: "21%", height: "17.6%" } },
-  { id: "mug-hufs", label: "HUFS French mug", src: "/media/department-goods/mug-hufs.png", hotspot: { left: "73.8%", top: "29.8%", width: "21%", height: "17.6%" } },
-  { id: "pin-red", label: "Red French expression pin design", src: "/media/department-goods/pin-red.png", hotspot: { left: "5.8%", top: "49.3%", width: "21.9%", height: "21.4%" } },
-  { id: "pin-pink", label: "Pink French expression pin design", src: "/media/department-goods/pin-pink.png", hotspot: { left: "30.5%", top: "49.3%", width: "22.6%", height: "21.4%" } },
-  { id: "pin-blue", label: "Blue French expression pin design", src: "/media/department-goods/pin-blue.png", hotspot: { left: "55.4%", top: "49.3%", width: "22.5%", height: "21.4%" } },
-  { id: "notebook-navy", label: "Navy French department notebook", src: "/media/department-goods/notebook-navy.png", hotspot: { left: "46.3%", top: "72.5%", width: "23%", height: "23.5%" } },
-  { id: "notebook-eiffel", label: "Eiffel Tower HUFS notebook", src: "/media/department-goods/notebook-eiffel.png", hotspot: { left: "72.2%", top: "72.5%", width: "23%", height: "23.5%" } },
-];
-
-function DepartmentGoodsModal({ item, onClose }: { item: (typeof DEPARTMENT_GOODS)[number]; onClose: () => void }) {
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    document.body.classList.add("modal-open");
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.classList.remove("modal-open");
-    };
-  }, [onClose]);
-
-  return createPortal(
-    <div className="media-modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <section className="department-goods-modal" role="dialog" aria-modal="true" aria-label={item.label}>
-        <button type="button" className="modal-close media-modal-close" onClick={onClose} aria-label="Close enlarged item">×</button>
-        <img src={item.src} alt={item.label} />
-        <strong>{item.label}</strong>
-      </section>
-    </div>,
-    document.body,
+function DepartmentBrandingGallery() {
+  return (
+    <img
+      className="project-original project-original-poster"
+      src="/media/department-branding-original.png"
+      alt="Department merchandise and branding outcomes in the original poster design"
+    />
   );
 }
 
-function DepartmentBrandingGallery() {
-  const [selected, setSelected] = useState<(typeof DEPARTMENT_GOODS)[number] | null>(null);
-
+function BetterLeadersLaptop() {
   return (
-    <>
-      <div className="department-poster-gallery">
-        <img className="project-original project-original-poster" src="/media/department-branding-original.png" alt="Department merchandise and branding outcomes in the original poster design" />
-        {DEPARTMENT_GOODS.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className="department-hotspot"
-            style={item.hotspot}
-            onClick={() => setSelected(item)}
-            aria-label={`Enlarge ${item.label}`}
-          />
-        ))}
-      </div>
-      <span className="department-gallery-caption">Click each item to enlarge</span>
-      {selected && <DepartmentGoodsModal item={selected} onClose={() => setSelected(null)} />}
-    </>
+    <div className="better-leaders-laptop">
+      <img src="/media/better-leaders-transparent.png" alt="" aria-hidden="true" />
+      <video autoPlay muted loop playsInline controls preload="metadata" aria-label="Better Leaders campaign video">
+        <source src="/videos/better-leaders.mp4" type="video/mp4" />
+      </video>
+      <span className="better-leaders-camera" aria-hidden="true" />
+    </div>
   );
 }
 
@@ -534,13 +504,7 @@ function Projects() {
           "Strengthened global project coordination skills",
           "Developed a deeper understanding of ESG and sustainability",
         ]}
-        visual={
-          <img
-            className="project-original project-original-laptop interactive"
-            src="/media/better-leaders-transparent.png"
-            alt="Better Leaders global campaign shown in the original laptop design"
-          />
-        }
+        visual={<BetterLeadersLaptop />}
       />
 
       <ProjectSection
