@@ -43,6 +43,18 @@ function scrollToSection(id: string) {
   window.history.replaceState(null, "", `#${id}`);
 }
 
+function scrollToProject(id: string) {
+  const target = document.getElementById(id);
+  if (!target) return;
+
+  const headerOffset = 92;
+  const targetTop = Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerOffset);
+
+  window.history.pushState(null, "", `#${id}`);
+  window.scrollTo({ top: targetTop, behavior: "auto" });
+  target.focus({ preventScroll: true });
+}
+
 function useActiveSection() {
   const [active, setActive] = useState("home");
 
@@ -336,7 +348,14 @@ function Work() {
               <h3>{title.split("\n").map((line) => <span key={line}>{line}</span>)}</h3>
               <p>{subtitle.split("\n").map((line) => <span key={line}>{line}</span>)}</p>
               <strong>{role.split("\n").map((line) => <span key={line}>{line}</span>)}</strong>
-              <a className="view-project-link" href={`#project-${key}`}>
+              <a
+                className="view-project-link"
+                href={`#project-${key}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  scrollToProject(`project-${key}`);
+                }}
+              >
                 VIEW PROJECT
               </a>
             </div>
@@ -365,7 +384,7 @@ function ProjectSection({
   visual: ReactNode;
 }) {
   return (
-    <section id={id} className="project-detail section-anchor">
+    <section id={id} className="project-detail section-anchor" tabIndex={-1}>
       <h2 className="project-title">{title}</h2>
       <div className="project-copy">
         <p className="project-intro">{intro}</p>

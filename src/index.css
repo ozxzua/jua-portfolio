@@ -371,6 +371,12 @@ img { max-width: 100%; display: block; }
   background: #f9f9f9;
 }
 .project-detail:nth-of-type(even) { background: #f9f9f9; }
+.project-detail:focus { outline: none; }
+.project-detail:target .project-title { animation: projectArrival 650ms cubic-bezier(.2,.8,.2,1); }
+@keyframes projectArrival {
+  0% { color: var(--gold); transform: translateY(-12px) scale(1.03); }
+  100% { color: var(--blue); transform: translateY(0) scale(1); }
+}
 .project-title { grid-area: title; width: min(720px, 100%); margin: 0; justify-self: center; color: var(--blue); font-family: Anton, Impact, sans-serif; font-size: clamp(32px, 3.8vw, 54px); line-height: .97; text-align: center; }
 .project-copy { grid-area: copy; }
 .project-intro { font-weight: 800; font-size: 14px; line-height: 1.55; }
