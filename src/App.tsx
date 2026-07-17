@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { FormEvent, ReactNode } from "react";
+import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 type ProjectKey = "betterleaders" | "hitome" | "branding";
@@ -280,7 +280,7 @@ const WORK_CARDS: Array<{
   role: string;
   cover: string;
   alt: string;
-  video?: string;
+  video: string;
 }> = [
   {
     key: "betterleaders",
@@ -289,6 +289,7 @@ const WORK_CARDS: Array<{
     role: "Project Coordination · ESG\nGlobal Content",
     cover: "/media/work-better-leaders-original.jpg",
     alt: "Earth viewed from space",
+    video: "/videos/work-cards-original.mp4",
   },
   {
     key: "hitome",
@@ -297,7 +298,7 @@ const WORK_CARDS: Array<{
     role: "Market Research\nB2B Strategy",
     cover: "/media/work-hitome-original.jpg",
     alt: "Red spheres from the original Hitome project design",
-    video: "/videos/hitome-ko.mp4",
+    video: "/videos/work-cards-original.mp4",
   },
   {
     key: "branding",
@@ -306,6 +307,7 @@ const WORK_CARDS: Array<{
     role: "Branding · PR\nEvent Operations",
     cover: "/media/work-branding-original.jpg",
     alt: "HUFS lettering from the original branding design",
+    video: "/videos/work-cards-original.mp4",
   },
 ];
 
@@ -314,31 +316,29 @@ function Work() {
     <section id="work" className="work section-anchor grid-background">
       <h2>WORK</h2>
       <div className="work-grid">
-        {WORK_CARDS.map(({ key, title, subtitle, role, cover, alt, video }) => (
+        {WORK_CARDS.map(({ key, title, subtitle, role, cover, video }) => (
           <article className="work-card interactive" key={key}>
             <div className="work-cover-frame">
-              {video ? (
-                <video className="work-cover work-cover-video" autoPlay muted loop playsInline preload="metadata" poster={cover} aria-label="Hitome project video">
-                  <source src={video} type="video/mp4" />
-                </video>
-              ) : (
-                <img className="work-cover" src={cover} alt={alt} />
-              )}
-              {key === "branding" && (
-                <div className="branding-lettering" aria-hidden="true">
-                  {(["h", "u", "f", "s"] as const).map((letter) => (
-                    <img key={letter} src={`/media/branding-${letter}-original.png`} alt="" />
-                  ))}
-                </div>
-              )}
+              <video
+                className={`work-cover work-cover-video work-video-${key}`}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster={cover}
+                aria-label={`${title.replace("\n", " ")} animated project cover`}
+              >
+                <source src={video} type="video/mp4" />
+              </video>
             </div>
             <div className="work-card-body">
               <h3>{title.split("\n").map((line) => <span key={line}>{line}</span>)}</h3>
               <p>{subtitle.split("\n").map((line) => <span key={line}>{line}</span>)}</p>
               <strong>{role.split("\n").map((line) => <span key={line}>{line}</span>)}</strong>
-              <button type="button" onClick={() => scrollToSection(`project-${key}`)}>
+              <a className="view-project-link" href={`#project-${key}`}>
                 VIEW PROJECT
-              </button>
+              </a>
             </div>
           </article>
         ))}
@@ -387,22 +387,112 @@ function ProjectSection({
   );
 }
 
-function HitomePhonePlayer() {
+function HitomeVideoModal({ onClose }: { onClose: () => void }) {
   const [language, setLanguage] = useState<VideoLanguage>("ko");
   const source = language === "ko" ? "/videos/hitome-ko.mp4" : "/videos/hitome-de.mp4";
 
-  return (
-    <div className="hitome-phone-player">
-      <div className="hitome-phone-shell">
-        <div className="hitome-phone-notch" aria-hidden="true" />
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.classList.add("modal-open");
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.classList.remove("modal-open");
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div className="media-modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <section className="hitome-video-modal" role="dialog" aria-modal="true" aria-label="Hitome campaign videos">
+        <button type="button" className="modal-close media-modal-close" onClick={onClose} aria-label="Close Hitome video">×</button>
+        <div className="hitome-video-tabs" role="tablist" aria-label="Hitome video language">
+          <button type="button" role="tab" aria-selected={language === "ko"} className={language === "ko" ? "is-active" : ""} onClick={() => setLanguage("ko")}>KOREAN</button>
+          <button type="button" role="tab" aria-selected={language === "de"} className={language === "de" ? "is-active" : ""} onClick={() => setLanguage("de")}>GERMAN</button>
+        </div>
         <video key={source} src={source} controls autoPlay muted loop playsInline preload="metadata" aria-label={`${language === "ko" ? "Korean" : "German"} Hitome campaign video`} />
+      </section>
+    </div>,
+    document.body,
+  );
+}
+
+function HitomePhonePreview() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button type="button" className="hitome-phone-preview interactive" onClick={() => setOpen(true)} aria-haspopup="dialog">
+        <img src="/media/hitome-phone-original.png" alt="Original Hitome phone mockup" />
+        <span>Click here to see more</span>
+      </button>
+      {open && <HitomeVideoModal onClose={() => setOpen(false)} />}
+    </>
+  );
+}
+
+const DEPARTMENT_GOODS: Array<{
+  id: string;
+  label: string;
+  src: string;
+  hotspot: CSSProperties;
+}> = [
+  { id: "mug-quote", label: "French quote mug", src: "/media/department-goods/mug-quote.png", hotspot: { left: "50%", top: "29.8%", width: "21%", height: "17.6%" } },
+  { id: "mug-hufs", label: "HUFS French mug", src: "/media/department-goods/mug-hufs.png", hotspot: { left: "73.8%", top: "29.8%", width: "21%", height: "17.6%" } },
+  { id: "pin-red", label: "Red French expression pin design", src: "/media/department-goods/pin-red.png", hotspot: { left: "5.8%", top: "49.3%", width: "21.9%", height: "21.4%" } },
+  { id: "pin-pink", label: "Pink French expression pin design", src: "/media/department-goods/pin-pink.png", hotspot: { left: "30.5%", top: "49.3%", width: "22.6%", height: "21.4%" } },
+  { id: "pin-blue", label: "Blue French expression pin design", src: "/media/department-goods/pin-blue.png", hotspot: { left: "55.4%", top: "49.3%", width: "22.5%", height: "21.4%" } },
+  { id: "notebook-navy", label: "Navy French department notebook", src: "/media/department-goods/notebook-navy.png", hotspot: { left: "46.3%", top: "72.5%", width: "23%", height: "23.5%" } },
+  { id: "notebook-eiffel", label: "Eiffel Tower HUFS notebook", src: "/media/department-goods/notebook-eiffel.png", hotspot: { left: "72.2%", top: "72.5%", width: "23%", height: "23.5%" } },
+];
+
+function DepartmentGoodsModal({ item, onClose }: { item: (typeof DEPARTMENT_GOODS)[number]; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.classList.add("modal-open");
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.classList.remove("modal-open");
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div className="media-modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <section className="department-goods-modal" role="dialog" aria-modal="true" aria-label={item.label}>
+        <button type="button" className="modal-close media-modal-close" onClick={onClose} aria-label="Close enlarged item">×</button>
+        <img src={item.src} alt={item.label} />
+        <strong>{item.label}</strong>
+      </section>
+    </div>,
+    document.body,
+  );
+}
+
+function DepartmentBrandingGallery() {
+  const [selected, setSelected] = useState<(typeof DEPARTMENT_GOODS)[number] | null>(null);
+
+  return (
+    <>
+      <div className="department-poster-gallery">
+        <img className="project-original project-original-poster" src="/media/department-branding-original.png" alt="Department merchandise and branding outcomes in the original poster design" />
+        {DEPARTMENT_GOODS.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className="department-hotspot"
+            style={item.hotspot}
+            onClick={() => setSelected(item)}
+            aria-label={`Enlarge ${item.label}`}
+          />
+        ))}
       </div>
-      <span className="hitome-player-caption">Click here to see more</span>
-      <div className="hitome-video-tabs" role="tablist" aria-label="Hitome video language">
-        <button type="button" role="tab" aria-selected={language === "ko"} className={language === "ko" ? "is-active" : ""} onClick={() => setLanguage("ko")}>KOREAN</button>
-        <button type="button" role="tab" aria-selected={language === "de"} className={language === "de" ? "is-active" : ""} onClick={() => setLanguage("de")}>GERMAN</button>
-      </div>
-    </div>
+      <span className="department-gallery-caption">Click each item to enlarge</span>
+      {selected && <DepartmentGoodsModal item={selected} onClose={() => setSelected(null)} />}
+    </>
   );
 }
 
@@ -428,7 +518,7 @@ function Projects() {
         visual={
           <img
             className="project-original project-original-laptop interactive"
-            src="/media/better-leaders-original.png"
+            src="/media/better-leaders-transparent.png"
             alt="Better Leaders global campaign shown in the original laptop design"
           />
         }
@@ -455,7 +545,7 @@ function Projects() {
           "Generated buyer interest from Germany and the U.S.",
           "Built practical experience in market research, export marketing, and content planning",
         ]}
-        visual={<HitomePhonePlayer />}
+        visual={<HitomePhonePreview />}
       />
 
       <ProjectSection
@@ -478,13 +568,7 @@ function Projects() {
           "Improved consistency in department promotion",
           "Gained experience in branding, vendor communication, and event execution",
         ]}
-        visual={
-          <img
-            className="project-original project-original-poster interactive"
-            src="/media/department-branding-original.png"
-            alt="Department merchandise and branding outcomes in the original poster design"
-          />
-        }
+        visual={<DepartmentBrandingGallery />}
       />
 
     </>
