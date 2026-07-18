@@ -49,16 +49,9 @@ function scrollToProject(id: string) {
 
   const headerOffset = 92;
   const targetTop = Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerOffset);
-  const root = document.documentElement;
-  const previousScrollBehavior = root.style.scrollBehavior;
 
   window.history.pushState(null, "", `#${id}`);
-  root.style.scrollBehavior = "auto";
-  window.scrollTo(0, targetTop);
-  target.focus({ preventScroll: true });
-  window.requestAnimationFrame(() => {
-    root.style.scrollBehavior = previousScrollBehavior;
-  });
+  window.scrollTo({ top: targetTop, behavior: "smooth" });
 }
 
 function useActiveSection() {

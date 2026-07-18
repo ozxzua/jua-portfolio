@@ -396,14 +396,14 @@ img { max-width: 100%; display: block; }
 
 .hitome-phone-preview { width: min(250px, 68vw); padding: 0; border: 0; background: transparent; color: var(--blue); font-weight: 700; transition: transform 220ms ease, filter 220ms ease; }
 .hitome-phone-outline { position: relative; display: block; width: 100%; }
-.hitome-phone-outline::after { content: ""; position: absolute; inset: 2.5% 9% 1%; border: 3px solid transparent; border-radius: 17% / 9%; box-shadow: 0 0 0 0 transparent; pointer-events: none; transition: border-color 180ms ease, box-shadow 180ms ease; }
+.hitome-phone-outline::after { content: ""; position: absolute; inset: 2.5% 9% 1%; border-radius: 12% / 5%; box-shadow: 0 0 0 0 transparent; pointer-events: none; transition: box-shadow 180ms ease; }
 .hitome-phone-preview img { width: 100%; height: auto; }
 .hitome-phone-preview > span:last-child { display: block; margin-top: 12px; font-size: 14px; }
 .hitome-phone-preview:hover, .hitome-phone-preview:focus-visible { outline: none; transform: translateY(-7px); filter: drop-shadow(0 16px 16px rgba(0,0,0,.14)); }
 .hitome-phone-preview:hover .hitome-phone-outline::after,
 .hitome-phone-preview:focus-visible .hitome-phone-outline::after,
 .hitome-phone-preview:active .hitome-phone-outline::after,
-.hitome-phone-preview[aria-expanded="true"] .hitome-phone-outline::after { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(225,182,66,.22); }
+.hitome-phone-preview[aria-expanded="true"] .hitome-phone-outline::after { box-shadow: 0 0 0 3px var(--gold), 0 0 0 7px rgba(225,182,66,.22); }
 .media-modal-backdrop { position: fixed; z-index: 120; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(14,8,72,.76); backdrop-filter: blur(8px); animation: fadeIn 160ms ease; }
 .hitome-video-modal { position: relative; display: flex; flex-direction: column; align-items: center; border: 2px solid var(--gold); background: #fff; box-shadow: 16px 16px 0 var(--blue); animation: profileModalIn 200ms ease; }
 .hitome-video-modal { width: min(470px, 100%); padding: 58px 24px 24px; }
