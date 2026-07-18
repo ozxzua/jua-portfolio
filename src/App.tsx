@@ -43,9 +43,6 @@ function scrollToSection(id: string) {
   window.history.replaceState(null, "", `#${id}`);
 }
 
-function scrollToProject(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-}
 
 function useActiveSection() {
   const [active, setActive] = useState("home");
@@ -343,8 +340,7 @@ function Work() {
               <button
                 type="button"
                 className="view-project-link"
-                aria-controls={`project-${key}`}
-                onClick={() => scrollToProject(`project-${key}`)}
+                onClick={() => document.getElementById(`project-${key}`)?.scrollIntoView({ behavior: "smooth" })}
               >
                 VIEW PROJECT
               </button>

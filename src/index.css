@@ -352,7 +352,8 @@ img { max-width: 100%; display: block; }
 .work-card-body h3 span, .work-card-body p span, .work-card-body strong span { display: block; }
 .work-card-body p { min-height: 48px; color: #555; font-size: 12px; line-height: 1.5; }
 .work-card-body strong { display: block; min-height: 46px; color: var(--blue); font-size: 13px; line-height: 1.35; }
-.view-project-link { display: inline-block; margin-top: 20px; padding: 11px 22px; border: 2px solid var(--blue); border-radius: 999px; background: var(--blue); color: #fff; font-size: 11px; font-weight: 800; text-decoration: none; transition: 180ms ease; }
+.view-project-link { display: inline-block; margin-top: 20px; padding: 11px 22px; border: 2px solid var(--blue); border-radius: 999px; background: var(--blue); color: #fff; font-size: 11px; font-weight: 800; text-decoration: none; transition: 180ms ease; user-select: none; cursor: pointer; }
+.view-project-link:focus { outline: none; }
 .view-project-link:hover, .view-project-link:focus-visible { border-color: var(--gold); color: var(--gold-soft); transform: scale(1.04); outline: none; }
 
 .project-detail {
