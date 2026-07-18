@@ -44,14 +44,7 @@ function scrollToSection(id: string) {
 }
 
 function scrollToProject(id: string) {
-  const target = document.getElementById(id);
-  if (!target) return;
-
-  const headerOffset = 92;
-  const targetTop = Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerOffset);
-
-  window.history.pushState(null, "", `#${id}`);
-  window.scrollTo({ top: targetTop, behavior: "smooth" });
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function useActiveSection() {
