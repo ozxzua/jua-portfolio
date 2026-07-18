@@ -340,7 +340,11 @@ function Work() {
               <button
                 type="button"
                 className="view-project-link"
-                onClick={() => document.getElementById(`project-${key}`)?.scrollIntoView({ behavior: "smooth" })}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  document.getElementById(`project-${key}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
               >
                 VIEW PROJECT
               </button>
