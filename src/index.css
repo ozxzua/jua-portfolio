@@ -396,10 +396,10 @@ img { max-width: 100%; display: block; }
 
 .hitome-phone-preview { width: min(250px, 68vw); padding: 0; border: 0; background: transparent; color: var(--blue); font-weight: 700; transition: transform 220ms ease, filter 220ms ease; }
 .hitome-phone-outline { position: relative; display: block; width: 100%; }
-.hitome-phone-outline::after { content: ""; position: absolute; inset: 2.5% 9% 1%; border-radius: 12% / 5%; box-shadow: 0 0 0 0 transparent; pointer-events: none; transition: box-shadow 180ms ease; }
+.hitome-phone-outline::after { content: ""; position: absolute; inset: 1.5% 2%; border-radius: 12% / 7%; box-shadow: 0 0 0 0 transparent; pointer-events: none; transition: box-shadow 180ms ease; }
 .hitome-phone-preview img { width: 100%; height: auto; }
 .hitome-phone-preview > span:last-child { display: block; margin-top: 12px; font-size: 14px; }
-.hitome-phone-preview:hover, .hitome-phone-preview:focus-visible { outline: none; transform: translateY(-7px); filter: drop-shadow(0 16px 16px rgba(0,0,0,.14)); }
+.hitome-phone-preview:hover, .hitome-phone-preview:focus, .hitome-phone-preview:focus-visible { outline: none; transform: translateY(-7px); filter: drop-shadow(0 16px 16px rgba(0,0,0,.14)); }
 .hitome-phone-preview:hover .hitome-phone-outline::after,
 .hitome-phone-preview:focus-visible .hitome-phone-outline::after,
 .hitome-phone-preview:active .hitome-phone-outline::after,
